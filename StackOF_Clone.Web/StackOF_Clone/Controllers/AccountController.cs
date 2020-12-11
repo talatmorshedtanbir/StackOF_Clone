@@ -8,6 +8,8 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using StackOF_Clone.Core.Entities;
+using StackOF_Clone.Core.Services;
 using StackOF_Clone.Models;
 
 namespace StackOF_Clone.Controllers

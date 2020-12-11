@@ -5,6 +5,9 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
+using StackOF_Clone.Core.Database.Contexts;
+using StackOF_Clone.Core.Entities;
+using StackOF_Clone.Core.Services;
 using StackOF_Clone.Models;
 
 namespace StackOF_Clone
@@ -15,7 +18,7 @@ namespace StackOF_Clone
         public void ConfigureAuth(IAppBuilder app)
         {
             // Configure the db context, user manager and signin manager to use a single instance per request
-            app.CreatePerOwinContext(ApplicationDbContext.Create);
+            app.CreatePerOwinContext(() => FNHibernateContext.SessionOpen());
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
             app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
 
