@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30717.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StackOF_Clone", "StackOF_Clone\StackOF_Clone.csproj", "{6715CB50-EAD6-4B53-B4F3-E79DCB8820CB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6715CB50-EAD6-4B53-B4F3-E79DCB8820CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6715CB50-EAD6-4B53-B4F3-E79DCB8820CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6715CB50-EAD6-4B53-B4F3-E79DCB8820CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6715CB50-EAD6-4B53-B4F3-E79DCB8820CB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8CE7C300-C592-4D9F-9D2A-828B66E83973}
+	EndGlobalSection
+EndGlobal
