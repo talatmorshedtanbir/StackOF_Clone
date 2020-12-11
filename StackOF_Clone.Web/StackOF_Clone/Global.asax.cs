@@ -1,3 +1,6 @@
+using NHibernate;
+using StackOF_Clone.Core.Database.Contexts;
+using StackOF_Clone.Web.Data_Seeder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +19,7 @@ namespace StackOF_Clone
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            AdminSeed.SeedIdentities(FNHibernateContext.SessionOpen());
         }
     }
 }
