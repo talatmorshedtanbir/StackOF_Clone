@@ -8,6 +8,9 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using NHibernate.AspNet.Identity;
+using StackOF_Clone.Core.Constants;
+using StackOF_Clone.Core.Database.Contexts;
 using StackOF_Clone.Core.Entities;
 using StackOF_Clone.Core.Services;
 using StackOF_Clone.Models;
@@ -78,19 +81,27 @@ namespace StackOF_Clone.Controllers
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-            switch (result)
+            var user = await UserManager.FindByEmailAsync(model.Email);
+            var userRoles = await UserManager.GetRolesAsync(user.Id);
+
+            if (result == SignInStatus.Success)
             {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);
+                if (userRoles.Any(x => x.Equals(Roles.AdminRole)))
+                {
+                    return RedirectToAction("Index", "MemberAccount", new { Area = "Admin" });
+                }
+                else if (userRoles.Any(x => x.Equals(Roles.MemberRole) || x.Equals(Roles.ModeratorRole)))
+                {
+                    return RedirectToAction("Index", "Home", new { Area = "" });
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Invalid Login Attempt.");
+                }
             }
+            ModelState.AddModelError("", "Invalid Login Attempt.");
+
+            return View(model);
         }
 
         //
@@ -155,6 +166,12 @@ namespace StackOF_Clone.Controllers
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
+
+                var session = FNHibernateContext.SessionOpen();
+                var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(session));
+
+                userManager.AddToRole(user.Id, "Member");
+
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
