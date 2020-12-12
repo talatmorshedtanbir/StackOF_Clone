@@ -1,0 +1,37 @@
+﻿@model StackOF_Clone.Web.Areas.Admin.Models.MemberUpdateModel
+
+<div class="modal-content">
+    <div class="modal-header border-bottom-0 ">
+        <h5 class="modal-title" id="exampleModalLabel">Member Roles</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body d-flex justify-content-center">
+        @using(Html.BeginForm("_MemberRoles", "MemberAccount", FormMethod.Post, new { enctype = "multipart/form-data"}))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <label class="label d-block">Select Claims</label>
+            @Html.HiddenFor(x => x.Id)
+            <div class="form-check">
+                @Html.CheckBoxFor(x => x.IsAdmin, new { @class = "form-check-input" })
+                @Html.LabelFor(x => x.IsAdmin, new { @class = "form-check-label" })
+            </div>
+            <div class="form-check">
+                @Html.CheckBoxFor(x => x.IsMember, new { @class = "form-check-input" })
+                @Html.LabelFor(x => x.IsMember, new { @class = "form-check-label" })
+            </div>
+            <div class="form-check">
+                @Html.CheckBoxFor(x => x.IsModerator, new { @class = "form-check-input" })
+                @Html.LabelFor(x => x.IsModerator, new { @class = "form-check-label" })
+            </div>
+            <div class="modal-footer border-top-0 justify-content-sm-between">
+                <button type="submit" class="btn btn-success">Submit</button>
+                <button type="submit" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+        }
+    </div>
+    </div>
