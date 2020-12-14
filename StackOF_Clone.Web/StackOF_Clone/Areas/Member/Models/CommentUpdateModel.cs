@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StackOF_Clone.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,12 +17,19 @@ namespace StackOF_Clone.Web.Areas.Member.Models
         public async Task CommentVoteUpdate(int id, string option)
         {
             var comment = await _forumService.GetComment(id);
+            var email = HttpContext.Current.User.Identity.Name;
+            var user = await _memberAccountService.FindByEmail(email);
 
-            if (option == "+")
-                comment.VoteCount++;
-            else
-                comment.VoteCount--;
+            var vote = new CommentVote
+            {
+                Comment = comment,
+                ApplicationUser = user,
+                UpVote = option == "+" ? true : false
+            };
 
+            await _votingService.PostCommentVote(vote);
+
+            comment.VoteCount = option == "+" ? ++comment.VoteCount : --comment.VoteCount;
             await _forumService.UpdateComment(comment);
         }
 
@@ -35,7 +43,9 @@ namespace StackOF_Clone.Web.Areas.Member.Models
 
         public async Task DeleteComment(int id)
         {
-            await _forumService.DeleteComment(id);
+            var comment = await _forumService.GetComment(id);
+
+            await _forumService.DeleteComment(comment);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace StackOF_Clone.Web.Areas.Member.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public string UserName { get; set; }
+
         public async Task Create()
         {
             var userId = HttpContext.Current.User.Identity.GetUserId();

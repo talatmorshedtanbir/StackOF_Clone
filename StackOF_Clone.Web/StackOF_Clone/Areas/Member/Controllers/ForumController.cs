@@ -19,7 +19,7 @@ namespace StackOF_Clone.Web.Areas.Member.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Member")]
+        [Authorize(Roles = "Member, Moderator")]
         public ActionResult PostQuestion()
         {
             var model = new PostQuestionModel();
@@ -36,6 +36,7 @@ namespace StackOF_Clone.Web.Areas.Member.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Member, Moderator")]
         public async Task<ActionResult> DeleteQuestion(int id)
         {
             var model = new QuestionUpdateModel();
@@ -52,6 +53,8 @@ namespace StackOF_Clone.Web.Areas.Member.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Member, Moderator")]
         public async Task<ActionResult> PostComment(QuestionViewModel model)
         {
             await model.PostComment();
@@ -59,12 +62,14 @@ namespace StackOF_Clone.Web.Areas.Member.Controllers
             return RedirectToAction($"QuestionDetails/{model.Id}");
         }
 
+        [Authorize(Roles = "Member, Moderator")]
         public async Task IncrementQuestionVote(int id)
         {
             var model = new QuestionUpdateModel();
 
             await model.QuestionVoteUpdate(id, "+");
         }
+
         public async Task DecrementQuestionVote(int id)
         {
             var model = new QuestionUpdateModel();
@@ -72,6 +77,7 @@ namespace StackOF_Clone.Web.Areas.Member.Controllers
             await model.QuestionVoteUpdate(id, "-");
         }
 
+        [Authorize(Roles = "Member, Moderator")]
         public async Task ApproveComment(int id)
         {
             var model = new CommentUpdateModel();
@@ -79,6 +85,7 @@ namespace StackOF_Clone.Web.Areas.Member.Controllers
             await model.ApproveComment(id);
         }
 
+        [Authorize(Roles = "Member, Moderator")]
         public async Task DeleteComment(int id)
         {
             var model = new CommentUpdateModel();

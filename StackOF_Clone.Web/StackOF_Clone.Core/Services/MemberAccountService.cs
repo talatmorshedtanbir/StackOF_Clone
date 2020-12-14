@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Net.Http;
+using System.Web.Mvc;
 
 namespace StackOF_Clone.Core.Services
 {
@@ -17,6 +18,7 @@ namespace StackOF_Clone.Core.Services
     {
         private readonly ISession _session;
         private readonly ApplicationUserManager _applicationUserManager;
+
         public MemberAccountService(ISession session, ApplicationUserManager applicationUserManager)
         {
             _session = session;
@@ -28,6 +30,7 @@ namespace StackOF_Clone.Core.Services
             _session = session;
             _applicationUserManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
         }
+
         public IList<ApplicationUser> GetMembersList()
         {
             var users = _applicationUserManager.Users.ToList();
@@ -43,6 +46,11 @@ namespace StackOF_Clone.Core.Services
         public Task<ApplicationUser> FindById(string id)
         {
             return _applicationUserManager.FindByIdAsync(id);
+        }
+
+        public Task<ApplicationUser> FindByEmail(string email)
+        {
+            return _applicationUserManager.FindByEmailAsync(email);
         }
 
         public Task<IList<string>> GetRoles(ApplicationUser user)

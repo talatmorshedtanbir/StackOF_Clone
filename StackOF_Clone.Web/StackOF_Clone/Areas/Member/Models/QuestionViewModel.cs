@@ -31,6 +31,7 @@ namespace StackOF_Clone.Web.Areas.Member.Models
         public DateTime CommentTime { get; set; }
         public bool IsApproved { get; set; }
         public Question Question { get; set; }
+        public IList<QuestionVote> QuestionVotes { get; set; }
 
         public void GetQuestions()
         {
@@ -40,6 +41,7 @@ namespace StackOF_Clone.Web.Areas.Member.Models
         public async Task GetQuestionDetails(int id)
         {
             var question = await _forumService.GetQuestion(id);
+            var questionVotes = _votingService.GetQuestionVotes().Where(x => x.Question.Id == id);
 
             if(question != null)
             {
@@ -51,6 +53,7 @@ namespace StackOF_Clone.Web.Areas.Member.Models
                 QuestionTime = question.QuestionTime;
                 Comments = question.Comments.ToList();
                 Questioner = question.ApplicationUser;
+                QuestionVotes = questionVotes.ToList();
             }
         }
 

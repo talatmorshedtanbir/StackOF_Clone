@@ -37,6 +37,8 @@ namespace StackOF_Clone.Core.Database.Contexts
                 .Database(MsSqlConfiguration.MsSql2012.ConnectionString(connectionString))
                 .Mappings(x => x.FluentMappings.AddFromAssemblyOf<QuestionMapping>())
                 .Mappings(x => x.FluentMappings.AddFromAssemblyOf<CommentMapping>())
+                .Mappings(x => x.FluentMappings.AddFromAssemblyOf<QuestionVoteMapping>())
+                .Mappings(x => x.FluentMappings.AddFromAssemblyOf<CommentMapping>())
                 .ExposeConfiguration(cfg =>
                 {
                     cfg.AddDeserializedMapping(MappingHelper.GetIdentityMappings(myEntities), null);

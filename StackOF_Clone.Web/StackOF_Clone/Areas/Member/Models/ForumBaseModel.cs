@@ -11,6 +11,8 @@ namespace StackOF_Clone.Web.Areas.Member.Models
     {
         protected readonly IForumService _forumService;
         protected readonly IMemberAccountService _memberAccountService;
+        protected readonly IVotingService _votingService;
+
         public ForumBaseModel(IForumService forumService)
         {
             _forumService = forumService;
@@ -20,6 +22,7 @@ namespace StackOF_Clone.Web.Areas.Member.Models
         {
             _forumService = DependencyResolver.Current.GetService<IForumService>();
             _memberAccountService = DependencyResolver.Current.GetService<IMemberAccountService>();
+            _votingService = DependencyResolver.Current.GetService<IVotingService>();
         }
 
         public void Dispose()

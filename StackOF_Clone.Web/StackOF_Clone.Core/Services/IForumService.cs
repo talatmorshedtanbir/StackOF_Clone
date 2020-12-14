@@ -11,12 +11,13 @@ namespace StackOF_Clone.Core.Services
     {
         Task PostQuestion(Question question);
         IList<Question> GetAllQuestions();
+        IList<Comment> GetAllComments();
         Task<Question> GetQuestion(int id);
         Task UpdateQuestion(Question question);
-        Task DeleteQuestion(int id);
+        Task DeleteQuestion(Question question);
         Task PostComment(Comment comment);
         Task<Comment> GetComment(int id);
         Task UpdateComment(Comment comment);
-        Task DeleteComment(int id);
+        Task DeleteComment(Comment comment);
     }
 }

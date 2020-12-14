@@ -12,5 +12,7 @@ namespace StackOF_Clone.Core.UnitOfWorks
     {
         IQuestionRepository QuestionRepository { get; set; }
         ICommentRepository CommentRepository { get; set; }
+        IQuestionVoteRepository QuestionVoteRepository { get; set; }
+        ICommentVoteRepository CommentVoteRepository { get; set; }
     }
 }

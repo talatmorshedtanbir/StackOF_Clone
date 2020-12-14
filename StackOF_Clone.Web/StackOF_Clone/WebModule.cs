@@ -17,11 +17,14 @@ namespace StackOF_Clone.Web
         {
             builder.RegisterType<QuestionRepository>().As<IQuestionRepository>().InstancePerLifetimeScope();
             builder.RegisterType<CommentRepository>().As<ICommentRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<QuestionVoteRepository>().As<IQuestionVoteRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<CommentVoteRepository>().As<ICommentVoteRepository>().InstancePerLifetimeScope();
 
             builder.RegisterType<ForumUnitOfWork>().As<IForumUnitOfWork>().InstancePerLifetimeScope();
 
             builder.RegisterType<MemberAccountService>().As<IMemberAccountService>().InstancePerLifetimeScope();
             builder.RegisterType<ForumService>().As<IForumService>().InstancePerLifetimeScope();
+            builder.RegisterType<VotingService>().As<IVotingService>().InstancePerLifetimeScope();
 
             builder.Register(s => FNHibernateContext.SessionOpen()).As<ISession>().InstancePerLifetimeScope();
 
