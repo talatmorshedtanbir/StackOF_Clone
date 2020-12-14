@@ -56,7 +56,7 @@ namespace StackOF_Clone.Web.Areas.Member.Controllers
         {
             await model.PostComment();
             
-            return RedirectToAction("Index");
+            return RedirectToAction($"QuestionDetails/{model.Id}");
         }
 
         public async Task IncrementQuestionVote(int id)
@@ -77,6 +77,13 @@ namespace StackOF_Clone.Web.Areas.Member.Controllers
             var model = new CommentUpdateModel();
 
             await model.ApproveComment(id);
+        }
+
+        public async Task DeleteComment(int id)
+        {
+            var model = new CommentUpdateModel();
+
+            await model.DeleteComment(id);
         }
 
         public async Task IncrementCommentVote(int id)

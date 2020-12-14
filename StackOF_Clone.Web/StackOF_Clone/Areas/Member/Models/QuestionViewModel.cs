@@ -22,7 +22,7 @@ namespace StackOF_Clone.Web.Areas.Member.Models
         public string Description { get; set; }
         public int VoteCount { get; set; }
         public int TotalComments { get; set; }
-        public string AskedBy { get; set; }
+        public ApplicationUser Questioner { get; set; }
         public DateTime QuestionTime { get; set; }
         public int CommentId { get; set; }
         public ApplicationUser Commenter { get; set; }
@@ -50,7 +50,7 @@ namespace StackOF_Clone.Web.Areas.Member.Models
                 TotalComments = question.Comments.Count;
                 QuestionTime = question.QuestionTime;
                 Comments = question.Comments.ToList();
-                AskedBy = question.ApplicationUser.Email;
+                Questioner = question.ApplicationUser;
             }
         }
 

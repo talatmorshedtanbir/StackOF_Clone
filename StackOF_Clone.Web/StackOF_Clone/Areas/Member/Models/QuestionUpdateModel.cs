@@ -16,7 +16,7 @@ namespace StackOF_Clone.Web.Areas.Member.Models
 
         public async Task DeleteQuestionById(int id)
         {
-           await _forumService.DeleteQuestionAsync(id);
+           await _forumService.DeleteQuestion(id);
         }
 
         public async Task QuestionVoteUpdate(int id, string option)

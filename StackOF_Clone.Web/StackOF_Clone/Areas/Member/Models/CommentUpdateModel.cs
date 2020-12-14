@@ -13,7 +13,6 @@ namespace StackOF_Clone.Web.Areas.Member.Models
 
         }
 
-
         public async Task CommentVoteUpdate(int id, string option)
         {
             var comment = await _forumService.GetComment(id);
@@ -32,6 +31,11 @@ namespace StackOF_Clone.Web.Areas.Member.Models
             comment.IsApproved = true;
 
             await _forumService.UpdateComment(comment);
+        }
+
+        public async Task DeleteComment(int id)
+        {
+            await _forumService.DeleteComment(id);
         }
     }
 }

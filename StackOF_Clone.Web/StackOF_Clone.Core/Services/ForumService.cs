@@ -63,7 +63,7 @@ namespace StackOF_Clone.Core.Services
             }
         }
 
-        public async Task DeleteQuestionAsync(int id)
+        public async Task DeleteQuestion(int id)
         {
             _forumUnitOfWork.BeginTransaction();
 
@@ -105,6 +105,21 @@ namespace StackOF_Clone.Core.Services
             try
             {
                 await _forumUnitOfWork.CommentRepository.UpdateAsync(comment);
+                _forumUnitOfWork.Commit();
+            }
+            catch
+            {
+                _forumUnitOfWork.Rollback();
+            }
+        }
+
+        public async Task DeleteComment(int id)
+        {
+            _forumUnitOfWork.BeginTransaction();
+
+            try
+            {
+                await _forumUnitOfWork.CommentRepository.DeleteByIdAsync(id);
                 _forumUnitOfWork.Commit();
             }
             catch

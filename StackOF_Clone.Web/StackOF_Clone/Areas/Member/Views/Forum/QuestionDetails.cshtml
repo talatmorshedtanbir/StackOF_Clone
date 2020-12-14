@@ -22,13 +22,13 @@
                         <hr />
                         <div class="post-footer29032">
                             <div class="l-side2023">
-                                @if (User.Identity.IsAuthenticated && User.Identity.Name == Model.AskedBy)
+                                @if ((User.Identity.Name == Model.Questioner.Email) || User.IsInRole("Moderator"))
                                 {
                                     <button type="button" class="btn btn-danger btn-sm" data-item-id="@Model.Id" data-item-description="@Model.Title" data-toggle="modal" data-target="#confirm-delete">Delete</button>
                                 }
                                 <i class="fa fa-clock-o clock2" aria-hidden="true"> @Model.QuestionTime</i> <a href="#"><i class="fa fa-commenting commenting2" aria-hidden="true"> @Model.TotalComments</i></a>
                             </div>
-                            @if (User.Identity.IsAuthenticated)
+                            @if (User.Identity.IsAuthenticated && (User.Identity.Name != Model.Questioner.Email) )
                             {
                                 <div class="l-rightside39">
                                     <button type="button" class="tolltip-button thumbs-up2" data-toggle="tooltip" data-placement="bottom" value="@Model.Id" id="like" title="Like"><i class="fa fa-thumbs-o-up " aria-hidden="true"></i></button>
@@ -41,7 +41,7 @@
                 <div class="author-details8392">
                     <span class="author-deatila04re">
                         <h5>Asked By:</h5>
-                        <p>@Model.AskedBy</p>
+                        <p>@Model.Questioner.Email</p>
                     </span>
                 </div>
 
@@ -54,24 +54,7 @@
                                     @{
                                         foreach (var comment in Model.Comments)
                                         {
-                                            if (comment.IsApproved)
-                                            {
-                                                <li>
-                                                    <div class="comment-main-level">
-                                                        <div class="comment-box">
-                                                            <div class="comment-head">
-                                                                <h6 class="comment-name"><a href="#">@comment.ApplicationUser.Email</a></h6> <span><i class="fa fa-clock-o" aria-hidden="true"> @comment.CommentTime</i></span>
-                                                                <div class="l-rightside39">
-                                                                    <button type="button" class="tolltip-button thumbs-up2" data-toggle="tooltip" data-placement="bottom" value="@comment.Id" id="commentLike" title="Like"><i class="fa fa-thumbs-o-up " aria-hidden="true"></i></button>
-                                                                    <button type="button" class="tolltip-button  thumbs-down2" data-toggle="tooltip" data-placement="bottom" value="@comment.Id" id="commentDislike" title="Dislike"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button> <span class="single-question-vote-result">@comment.VoteCount</span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="comment-content"> @comment.CommentDescription </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            }
-                                            else if (User.Identity.Name == comment.ApplicationUser.Email)
+                                            if (User.Identity.Name == Model.Questioner.Email || User.IsInRole("Moderator"))
                                             {
                                                 <li>
                                                     <div class="comment-main-level">
@@ -79,10 +62,13 @@
                                                             <div class="comment-head">
                                                                 <h6 class="comment-name"><a href="#">@comment.ApplicationUser.Email</a></h6> <span><i class="fa fa-clock-o" aria-hidden="true"> @comment.CommentTime</i></span>
                                                                 @if (!comment.IsApproved)
-                                                                    {<button type="button" class="btn btn-success btn-sm" value="@comment.Id" id="approveButton" style="margin-left:15px">Approve</button>}
+                                                                {<button type="button" class="btn btn-success btn-sm approveCommentbtn" value="@comment.Id" id="approveButton" style="margin-left:15px">Approve</button>}
+
+                                                                <button type="button" class="btn btn-danger btn-sm deleteCommentbtn" value="@comment.Id" id="deleteComment" style="margin-left:15px">Delete</button>
+
                                                                 <div class="l-rightside39">
-                                                                    <button type="button" class="tolltip-button thumbs-up2" data-toggle="tooltip" data-placement="bottom" value="@comment.Id" id="commentLike" title="Like"><i class="fa fa-thumbs-o-up " aria-hidden="true"></i></button>
-                                                                    <button type="button" class="tolltip-button  thumbs-down2" data-toggle="tooltip" data-placement="bottom" value="@comment.Id" id="commentDislike" title="Dislike"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button> <span class="single-question-vote-result">@comment.VoteCount</span>
+                                                                    <button type="button" class="tolltip-button thumbs-up2 likebtn" data-toggle="tooltip" data-placement="bottom" value="@comment.Id" id="commentLike" title="Like"><i class="fa fa-thumbs-o-up " aria-hidden="true"></i></button>
+                                                                    <button type="button" class="tolltip-button  thumbs-down2 dislikebtn" data-toggle="tooltip" data-placement="bottom" value="@comment.Id" id="commentDislike" title="Dislike"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button> <span class="single-question-vote-result">@comment.VoteCount</span>
                                                                 </div>
                                                             </div>
                                                             <div class="comment-content"> @comment.CommentDescription </div>
@@ -90,6 +76,27 @@
                                                     </div>
                                                 </li>
                                             }
+                                            else if (comment.IsApproved)
+                                            {
+                                                <li>
+                                                    <div class="comment-main-level">
+                                                        <div class="comment-box">
+                                                            <div class="comment-head">
+                                                                <h6 class="comment-name"><a href="#">@comment.ApplicationUser.Email</a></h6> <span><i class="fa fa-clock-o" aria-hidden="true"> @comment.CommentTime</i></span>
+                                                                @if (User.Identity.IsAuthenticated)
+                                                                {
+                                                                    <div class="l-rightside39">
+                                                                        <button type="button" class="tolltip-button thumbs-up2 likebtn" data-toggle="tooltip" data-placement="bottom" value="@comment.Id" id="commentLike" title="Like"><i class="fa fa-thumbs-o-up " aria-hidden="true"></i></button>
+                                                                        <button type="button" class="tolltip-button  thumbs-down2 dislikebtn" data-toggle="tooltip" data-placement="bottom" value="@comment.Id" id="commentDislike" title="Dislike"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button> <span class="single-question-vote-result">@comment.VoteCount</span>
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                            <div class="comment-content"> @comment.CommentDescription </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            }
+                                           
                                         }
                                     }
                                 </ul>
@@ -98,26 +105,24 @@
                     </div>
                 </div>
 
-                <div class="comment289-box">
-                    <h3>Leave A Reply</h3>
-                    <hr>                    
-                    <div class="row">
-                        @{
-                            if (User.Identity.IsAuthenticated)
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="comment289-box">
+                        <h3>Leave A Reply</h3>
+                        <hr>
+                        <div class="row">
+
+                            @using (Html.BeginForm("PostComment", "Forum", FormMethod.Post))
                             {
-                                using (Html.BeginForm("PostComment", "Forum", FormMethod.Post))
-                                {
-                                    @Html.HiddenFor(x => x.Id)
-                                    <div class="post9320-box">
-                                        @Html.TextBoxFor(x => x.CommentDescription, new { placeholder = "Enter Your Answer", @class = "comment-input219882" })
-                                    </div>
-                                    <button type="submit" class="pos393-submit">Post Your Answer</button>
-                                }
+                                @Html.HiddenFor(x => x.Id)
+                                <div class="post9320-box">
+                                    @Html.TextBoxFor(x => x.CommentDescription, new { placeholder = "Enter Your Answer", @class = "comment-input219882" })
+                                </div>
+                                <button type="submit" class="pos393-submit">Post Your Answer</button>
                             }
-                        }
+                        </div>
                     </div>
-                </div>
-            </div>
+                }
             <!--                end of col-md-9 -->
         </div>
     </div>
@@ -168,7 +173,7 @@
             });
         })
 
-        $("#commentLike").click(function () {
+        $(".likebtn").click(function () {
             var id = $(this).val();
             $.ajax({
                 type: "POST",
@@ -180,7 +185,7 @@
             });
         })
 
-        $("#commentDislike").click(function () {
+        $(".dislikebtn").click(function () {
             var id = $(this).val();
             $.ajax({
                 type: "POST",
@@ -192,7 +197,19 @@
             });
         })
 
-        $("#approveButton").click(function () {
+        $(".deleteCommentbtn").click(function () {
+            id = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "/Member/Forum/DeleteComment/" + id,
+                data: { id: id },
+                success: function () {
+                    location.reload();
+                }
+            });
+        });
+
+        $(".approveCommentbtn").click(function () {
             var id = $(this).val();
             $.ajax({
                 type: "POST",

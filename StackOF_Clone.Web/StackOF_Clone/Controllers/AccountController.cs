@@ -82,6 +82,10 @@ namespace StackOF_Clone.Controllers
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
             var user = await UserManager.FindByEmailAsync(model.Email);
+            if(user == null)
+            {
+                ModelState.AddModelError("", "Invalid Login Attempt.");
+            }
             var userRoles = await UserManager.GetRolesAsync(user.Id);
 
             if (result == SignInStatus.Success)
@@ -92,7 +96,7 @@ namespace StackOF_Clone.Controllers
                 }
                 else if (userRoles.Any(x => x.Equals(Roles.MemberRole) || x.Equals(Roles.ModeratorRole)))
                 {
-                    return RedirectToAction("Index", "Home", new { Area = "" });
+                    return RedirectToAction("Index", "Forum", new { Area = "Member" });
                 }
                 else
                 {
