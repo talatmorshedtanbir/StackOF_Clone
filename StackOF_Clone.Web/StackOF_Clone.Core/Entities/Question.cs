@@ -15,5 +15,6 @@ namespace StackOF_Clone.Core.Entities
         public virtual DateTime QuestionTime { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<QuestionVote> QuestionVotes { get; set; }
     }
 }

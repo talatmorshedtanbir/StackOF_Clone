@@ -171,10 +171,7 @@ namespace StackOF_Clone.Controllers
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
 
-                var session = FNHibernateContext.SessionOpen();
-                var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(session));
-
-                userManager.AddToRole(user.Id, "Member");
+                UserManager.AddToRole(user.Id, "Member");
 
                 if (result.Succeeded)
                 {

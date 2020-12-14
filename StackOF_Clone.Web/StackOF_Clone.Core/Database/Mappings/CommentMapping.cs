@@ -19,6 +19,7 @@ namespace StackOF_Clone.Core.Database.Mappings
             Map(x => x.CommentTime);
             References(x => x.ApplicationUser);
             References(x => x.Question);
+            HasMany(x => x.CommentVotes).Cascade.AllDeleteOrphan();
         }
     }
 }

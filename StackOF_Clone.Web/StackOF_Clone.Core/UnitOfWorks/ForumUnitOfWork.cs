@@ -13,12 +13,16 @@ namespace StackOF_Clone.Core.UnitOfWorks
     {
         public IQuestionRepository QuestionRepository { get; set; }
         public ICommentRepository CommentRepository { get; set; }
+        public IQuestionVoteRepository QuestionVoteRepository { get; set; }
+        public ICommentVoteRepository CommentVoteRepository { get; set; }
 
-        public ForumUnitOfWork(ISession session, IQuestionRepository questionRepository, ICommentRepository commentRepository)
+        public ForumUnitOfWork(ISession session, IQuestionRepository questionRepository, ICommentRepository commentRepository, IQuestionVoteRepository questionVoteRepository, ICommentVoteRepository commentVoteRepository)
             : base(session)
         {
             CommentRepository = commentRepository;
             QuestionRepository = questionRepository;
+            QuestionVoteRepository = questionVoteRepository;
+            CommentVoteRepository = commentVoteRepository;
         }
     }
 }

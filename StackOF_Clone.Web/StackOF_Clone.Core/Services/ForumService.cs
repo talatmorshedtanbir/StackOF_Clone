@@ -13,11 +13,6 @@ namespace StackOF_Clone.Core.Services
     {
         private IForumUnitOfWork _forumUnitOfWork;
 
-        public ForumService(IForumUnitOfWork forumUnitOfWork, ISession session)
-        {
-            _forumUnitOfWork = forumUnitOfWork;
-        }
-
         public ForumService(IForumUnitOfWork forumUnitOfWork)
         {
             _forumUnitOfWork = forumUnitOfWork;
@@ -43,6 +38,11 @@ namespace StackOF_Clone.Core.Services
             return _forumUnitOfWork.QuestionRepository.GetAll();
         }
 
+        public IList<Comment> GetAllComments()
+        {
+            return _forumUnitOfWork.CommentRepository.GetAll();
+        }
+
         public async Task<Question> GetQuestion(int id)
         {
             return await _forumUnitOfWork.QuestionRepository.GetByIdAsync(id);
@@ -63,13 +63,13 @@ namespace StackOF_Clone.Core.Services
             }
         }
 
-        public async Task DeleteQuestion(int id)
+        public async Task DeleteQuestion(Question question)
         {
             _forumUnitOfWork.BeginTransaction();
 
             try
             {
-                await _forumUnitOfWork.QuestionRepository.DeleteByIdAsync(id);
+                await _forumUnitOfWork.QuestionRepository.DeleteAsync(question);
                 _forumUnitOfWork.Commit();
             }
             catch
@@ -113,13 +113,33 @@ namespace StackOF_Clone.Core.Services
             }
         }
 
-        public async Task DeleteComment(int id)
+        public async Task DeleteComment(Comment comment)
         {
             _forumUnitOfWork.BeginTransaction();
 
             try
             {
-                await _forumUnitOfWork.CommentRepository.DeleteByIdAsync(id);
+                await _forumUnitOfWork.CommentRepository.DeleteAsync(comment);
+                _forumUnitOfWork.Commit();
+            }
+            catch
+            {
+                _forumUnitOfWork.Rollback();
+            }
+        }
+
+        public IList<QuestionVote> GetQuestionVotes()
+        {
+            return _forumUnitOfWork.QuestionVoteRepository.GetAll();
+        }
+
+        public async Task PostQuestionVote(QuestionVote questionVote)
+        {
+            _forumUnitOfWork.BeginTransaction();
+
+            try
+            {
+                await _forumUnitOfWork.QuestionVoteRepository.CreateAsync(questionVote);
                 _forumUnitOfWork.Commit();
             }
             catch

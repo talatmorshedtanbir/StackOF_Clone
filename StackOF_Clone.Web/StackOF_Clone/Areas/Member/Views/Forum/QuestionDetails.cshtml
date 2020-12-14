@@ -28,12 +28,25 @@
                                 }
                                 <i class="fa fa-clock-o clock2" aria-hidden="true"> @Model.QuestionTime</i> <a href="#"><i class="fa fa-commenting commenting2" aria-hidden="true"> @Model.TotalComments</i></a>
                             </div>
-                            @if (User.Identity.IsAuthenticated && (User.Identity.Name != Model.Questioner.Email) )
-                            {
-                                <div class="l-rightside39">
-                                    <button type="button" class="tolltip-button thumbs-up2" data-toggle="tooltip" data-placement="bottom" value="@Model.Id" id="like" title="Like"><i class="fa fa-thumbs-o-up " aria-hidden="true"></i></button>
-                                    <button type="button" class="tolltip-button  thumbs-down2" data-toggle="tooltip" data-placement="bottom" id="dislike" value="@Model.Id" title="Dislike"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button> <span class="single-question-vote-result">@Model.VoteCount</span>
-                                </div>
+                            @{
+                                if (User.Identity.IsAuthenticated && (User.Identity.Name != Model.Questioner.Email))
+                                {
+                                    if (!Model.QuestionVotes.Any(x => x.ApplicationUser != null && (x.ApplicationUser.Email == User.Identity.Name)))
+                                    {
+                                        <div class="l-rightside39">
+                                            <button type="button" class="tolltip-button thumbs-up2" data-toggle="tooltip" data-placement="bottom" value="@Model.Id" id="like" title="Like"><i class="fa fa-thumbs-o-up " aria-hidden="true"></i></button>
+                                            <button type="button" class="tolltip-button  thumbs-down2" data-toggle="tooltip" data-placement="bottom" id="dislike" value="@Model.Id" title="Dislike"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button> <span class="single-question-vote-result">@Model.VoteCount</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span><i class="fa fa-thumbs-o-up" aria-hidden="true"> @Model.VoteCount</i></span> <b class="mr-4 text-danger"><i> Voting is closed !</i></b>
+                                    }
+                                }
+                                else
+                                {
+                                    <span><i class="fa fa-thumbs-o-up" aria-hidden="true"> @Model.VoteCount</i></span>
+                                }
                             }
                         </div>
                     </div>
@@ -54,49 +67,63 @@
                                     @{
                                         foreach (var comment in Model.Comments)
                                         {
-                                            if (User.Identity.Name == Model.Questioner.Email || User.IsInRole("Moderator"))
+                                            if (comment.IsApproved || User.Identity.Name == Model.Questioner.Email)
                                             {
                                                 <li>
                                                     <div class="comment-main-level">
                                                         <div class="comment-box">
                                                             <div class="comment-head">
                                                                 <h6 class="comment-name"><a href="#">@comment.ApplicationUser.Email</a></h6> <span><i class="fa fa-clock-o" aria-hidden="true"> @comment.CommentTime</i></span>
-                                                                @if (!comment.IsApproved)
-                                                                {<button type="button" class="btn btn-success btn-sm approveCommentbtn" value="@comment.Id" id="approveButton" style="margin-left:15px">Approve</button>}
-
-                                                                <button type="button" class="btn btn-danger btn-sm deleteCommentbtn" value="@comment.Id" id="deleteComment" style="margin-left:15px">Delete</button>
-
-                                                                <div class="l-rightside39">
-                                                                    <button type="button" class="tolltip-button thumbs-up2 likebtn" data-toggle="tooltip" data-placement="bottom" value="@comment.Id" id="commentLike" title="Like"><i class="fa fa-thumbs-o-up " aria-hidden="true"></i></button>
-                                                                    <button type="button" class="tolltip-button  thumbs-down2 dislikebtn" data-toggle="tooltip" data-placement="bottom" value="@comment.Id" id="commentDislike" title="Dislike"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button> <span class="single-question-vote-result">@comment.VoteCount</span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="comment-content"> @comment.CommentDescription </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            }
-                                            else if (comment.IsApproved)
-                                            {
-                                                <li>
-                                                    <div class="comment-main-level">
-                                                        <div class="comment-box">
-                                                            <div class="comment-head">
-                                                                <h6 class="comment-name"><a href="#">@comment.ApplicationUser.Email</a></h6> <span><i class="fa fa-clock-o" aria-hidden="true"> @comment.CommentTime</i></span>
-                                                                @if (User.Identity.IsAuthenticated)
+                                                                @if (User.Identity.Name == Model.Questioner.Email || User.IsInRole("Moderator"))
                                                                 {
-                                                                    <div class="l-rightside39">
-                                                                        <button type="button" class="tolltip-button thumbs-up2 likebtn" data-toggle="tooltip" data-placement="bottom" value="@comment.Id" id="commentLike" title="Like"><i class="fa fa-thumbs-o-up " aria-hidden="true"></i></button>
-                                                                        <button type="button" class="tolltip-button  thumbs-down2 dislikebtn" data-toggle="tooltip" data-placement="bottom" value="@comment.Id" id="commentDislike" title="Dislike"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button> <span class="single-question-vote-result">@comment.VoteCount</span>
-                                                                    </div>
+                                                                    if (!comment.IsApproved)
+                                                                    {<button type="button" class="btn btn-success btn-sm approveCommentbtn" value="@comment.Id" id="approveButton" style="margin-left:15px">Approve</button>}
+
+                                                                    <button type="button" class="btn btn-danger btn-sm deleteCommentbtn" value="@comment.Id" id="deleteComment" style="margin-left:15px">Delete</button>
+                                                                }
+                                                                @{
+                                                                    if (User.Identity.IsAuthenticated && (User.Identity.Name != comment.ApplicationUser.Email))
+                                                                    {
+                                                                        if (!comment.CommentVotes.Any(x => x.ApplicationUser != null && (x.ApplicationUser.Email == User.Identity.Name)))
+                                                                        {
+                                                                            <div class="l-rightside39">
+                                                                                <button type="button" class="tolltip-button thumbs-up2 likebtn" data-toggle="tooltip " data-placement="bottom" value="@comment.Id" id="likeComment" title="Like"><i class="fa fa-thumbs-o-up " aria-hidden="true"></i></button>
+                                                                                <button type="button" class="tolltip-button  thumbs-down2 dislikebtn" data-toggle="tooltip " data-placement="bottom" id="dislikeComment" value="@comment.Id" title="Dislike"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button> <span class="single-question-vote-result">@comment.VoteCount</span>
+                                                                            </div>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            if(comment.VoteCount >= 0)
+                                                                        {
+                                                                            <span><i class="fa fa-thumbs-o-up" aria-hidden="true"> @comment.VoteCount</i></span>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span><i class="fa fa-thumbs-o-down" aria-hidden="true"> @comment.VoteCount</i></span>
+                                                                        } <b class="mr-4 text-danger"><i> Voting is closed !</i></b>
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if(comment.VoteCount >= 0)
+                                                                        {
+                                                                            <span><i class="fa fa-thumbs-o-up" aria-hidden="true"> @comment.VoteCount</i></span>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span><i class="fa fa-thumbs-o-down" aria-hidden="true"> @comment.VoteCount</i></span>
+                                                                        }
+
+                                                                    }
                                                                 }
                                                             </div>
                                                             <div class="comment-content"> @comment.CommentDescription </div>
                                                         </div>
                                                     </div>
                                                 </li>
+
                                             }
-                                           
+
                                         }
                                     }
                                 </ul>
@@ -124,6 +151,7 @@
                     </div>
                 }
             <!--                end of col-md-9 -->
+            </div>
         </div>
     </div>
 </section>

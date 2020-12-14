@@ -13,6 +13,7 @@ namespace StackOF_Clone.Core.Services
         Task<IdentityResult> Delete(ApplicationUser user);
         IList<ApplicationUser> GetMembersList();
         Task<ApplicationUser> FindById(string id);
+        Task<ApplicationUser> FindByEmail(string email);
         Task<IList<string>> GetRoles(ApplicationUser user);
         Task<IdentityResult> RemoveRoles(ApplicationUser user, List<string> roles);
         Task<IdentityResult> AddRoles(ApplicationUser user, List<string> roles);

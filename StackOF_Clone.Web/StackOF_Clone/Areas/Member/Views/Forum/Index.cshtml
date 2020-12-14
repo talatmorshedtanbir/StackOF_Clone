@@ -26,6 +26,7 @@
                                                     @Html.ActionLink(question.Title, "QuestionDetails", new { id = question.Id })
                                                 </h3>
                                             </div>
+                                            <span class="single-question-vote-result"><b class="text-danger">@question.VoteCount</b></span><b> Likes</b>
                                             <div class="ques-details10018">
                                                 <p>@question.Description</p>
                                             </div>
@@ -35,7 +36,7 @@
                                     <div class="col-md-2">
                                         <div class="ques-type302">
                                             <a href="#">
-                                                <button type="button" disabled class="q-type238"><i class="fa fa-comment" aria-hidden="true">  @question.Comments.Count</i></button>
+                                                <button type="button" disabled class="q-type238"><i class="fa fa-comment" aria-hidden="true">  @question.Comments.Count(x => x.IsApproved)</i></button>
                                             </a>
                                         </div>
                                     </div>

@@ -8,18 +8,14 @@ using System.Threading.Tasks;
 
 namespace StackOF_Clone.Core.Database.Mappings
 {
-    public class QuestionMapping : ClassMap<Question>
+    public class CommentVoteMapping : ClassMap<CommentVote>
     {
-        public QuestionMapping()
+        public CommentVoteMapping()
         {
             Id(x => x.Id).GeneratedBy.Identity();
-            Map(x => x.Title);
-            Map(x => x.Description);
-            Map(x => x.VoteCount);
-            Map(x => x.QuestionTime);
+            Map(x => x.UpVote);
             References(x => x.ApplicationUser);
-            HasMany(x => x.Comments).Cascade.AllDeleteOrphan();
-            HasMany(x => x.QuestionVotes).Cascade.AllDeleteOrphan();
+            References(x => x.Comment);
         }
     }
 }
