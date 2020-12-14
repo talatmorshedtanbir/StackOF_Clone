@@ -1,0 +1,71 @@
+﻿@using Microsoft.AspNet.Identity
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>StackOF_Clone</title>
+        <link href="~/Content/member/css/bootstrap.css" rel="stylesheet" type="text/css">
+        <link href="~/Content/member/css/style.css" rel="stylesheet" type="text/css">
+        <link href="~/Content/member/css/editor.css" rel="stylesheet" type="text/css">
+        @RenderSection("PageStyles", false)
+        <link href="~/Content/member/css/animate.css" rel="stylesheet" type="text/css">
+        <link href="~/Content/member/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    </head>
+
+    <body>
+        <!--======== Navbar =======-->
+        <div class="top-menu-bottom932">
+            <nav class="navbar navbar-default">
+                <div class="container">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+                        <a class="navbar-brand" href="/home/index"><p style="color:aqua">Home Page</p></a>
+                    </div>
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav"> </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="/member/forum/index">Home</a></li>
+                            @if (Request.IsAuthenticated)
+                            {
+                                <li><a href="/member/forum/postquestion">Ask Question</a></li>
+                                using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { area = "", id = "logoutForm", @class = "navbar-right" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <li>
+                                        @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", new { Area = "" }, new { @class = "nav-link text-dark", title = "Manage" })
+                                    </li>
+                                    <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                                }
+                            }
+                            else
+                            {
+                                <li><a href="/account/login">Login</a></li>
+                            }
+                        </ul>
+                    </div>
+                    <!-- /.navbar-collapse -->
+                </div>
+                <!-- /.container-fluid -->
+            </nav>
+        </div>
+        <!--    breadcumb of category -->
+        <!--    body content-->
+        <div class="padding-bottom" id="content">
+            @RenderBody()
+        </div>
+
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="~/Content/member/js/jquery-3.1.1.min.js"></script>
+        <script src="~/Content/member/js/bootstrap.min.js"></script>
+        @RenderSection("PageScripts", false)
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script src="~/Content/member/js/editor.js"></script>
+    </body>
+
+</html>

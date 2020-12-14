@@ -48,6 +48,8 @@ namespace StackOF_Clone.Web.Data_Seeder
                 if (userResult.Succeeded)
                 {
                     userManager.AddToRole(user.Id, Roles.AdminRole);
+                    userManager.AddToRole(user.Id, Roles.MemberRole);
+                    userManager.AddToRole(user.Id, Roles.ModeratorRole);
                 }
             }
         }

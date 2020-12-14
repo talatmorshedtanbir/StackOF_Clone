@@ -1,0 +1,236 @@
+﻿@model StackOF_Clone.Web.Areas.Member.Models.QuestionViewModel
+@{
+    ViewBag.Title = "QuestionDetails";
+}
+@using Microsoft.AspNet.Identity
+<section class="main-content920">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="post-details">
+                    <div class="details-header923">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="post-title-left129">
+                                    <h3>@Model.Title</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="post-details-info1982">
+                        <p>@Model.Description</p>
+                        <hr />
+                        <div class="post-footer29032">
+                            <div class="l-side2023">
+                                @if ((User.Identity.Name == Model.Questioner.Email) || User.IsInRole("Moderator"))
+                                {
+                                    <button type="button" class="btn btn-danger btn-sm" data-item-id="@Model.Id" data-item-description="@Model.Title" data-toggle="modal" data-target="#confirm-delete">Delete</button>
+                                }
+                                <i class="fa fa-clock-o clock2" aria-hidden="true"> @Model.QuestionTime</i> <a href="#"><i class="fa fa-commenting commenting2" aria-hidden="true"> @Model.TotalComments</i></a>
+                            </div>
+                            @if (User.Identity.IsAuthenticated && (User.Identity.Name != Model.Questioner.Email) )
+                            {
+                                <div class="l-rightside39">
+                                    <button type="button" class="tolltip-button thumbs-up2" data-toggle="tooltip" data-placement="bottom" value="@Model.Id" id="like" title="Like"><i class="fa fa-thumbs-o-up " aria-hidden="true"></i></button>
+                                    <button type="button" class="tolltip-button  thumbs-down2" data-toggle="tooltip" data-placement="bottom" id="dislike" value="@Model.Id" title="Dislike"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button> <span class="single-question-vote-result">@Model.VoteCount</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="author-details8392">
+                    <span class="author-deatila04re">
+                        <h5>Asked By:</h5>
+                        <p>@Model.Questioner.Email</p>
+                    </span>
+                </div>
+
+                <div class="comment-list12993">
+                    <div class="container">
+                        <div class="row">
+                            <div class="comments-container">
+                                <h5>Comments:</h5>
+                                <ul id="comments-list" class="comments-list">
+                                    @{
+                                        foreach (var comment in Model.Comments)
+                                        {
+                                            if (User.Identity.Name == Model.Questioner.Email || User.IsInRole("Moderator"))
+                                            {
+                                                <li>
+                                                    <div class="comment-main-level">
+                                                        <div class="comment-box">
+                                                            <div class="comment-head">
+                                                                <h6 class="comment-name"><a href="#">@comment.ApplicationUser.Email</a></h6> <span><i class="fa fa-clock-o" aria-hidden="true"> @comment.CommentTime</i></span>
+                                                                @if (!comment.IsApproved)
+                                                                {<button type="button" class="btn btn-success btn-sm approveCommentbtn" value="@comment.Id" id="approveButton" style="margin-left:15px">Approve</button>}
+
+                                                                <button type="button" class="btn btn-danger btn-sm deleteCommentbtn" value="@comment.Id" id="deleteComment" style="margin-left:15px">Delete</button>
+
+                                                                <div class="l-rightside39">
+                                                                    <button type="button" class="tolltip-button thumbs-up2 likebtn" data-toggle="tooltip" data-placement="bottom" value="@comment.Id" id="commentLike" title="Like"><i class="fa fa-thumbs-o-up " aria-hidden="true"></i></button>
+                                                                    <button type="button" class="tolltip-button  thumbs-down2 dislikebtn" data-toggle="tooltip" data-placement="bottom" value="@comment.Id" id="commentDislike" title="Dislike"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button> <span class="single-question-vote-result">@comment.VoteCount</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="comment-content"> @comment.CommentDescription </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            }
+                                            else if (comment.IsApproved)
+                                            {
+                                                <li>
+                                                    <div class="comment-main-level">
+                                                        <div class="comment-box">
+                                                            <div class="comment-head">
+                                                                <h6 class="comment-name"><a href="#">@comment.ApplicationUser.Email</a></h6> <span><i class="fa fa-clock-o" aria-hidden="true"> @comment.CommentTime</i></span>
+                                                                @if (User.Identity.IsAuthenticated)
+                                                                {
+                                                                    <div class="l-rightside39">
+                                                                        <button type="button" class="tolltip-button thumbs-up2 likebtn" data-toggle="tooltip" data-placement="bottom" value="@comment.Id" id="commentLike" title="Like"><i class="fa fa-thumbs-o-up " aria-hidden="true"></i></button>
+                                                                        <button type="button" class="tolltip-button  thumbs-down2 dislikebtn" data-toggle="tooltip" data-placement="bottom" value="@comment.Id" id="commentDislike" title="Dislike"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button> <span class="single-question-vote-result">@comment.VoteCount</span>
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                            <div class="comment-content"> @comment.CommentDescription </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            }
+                                           
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="comment289-box">
+                        <h3>Leave A Reply</h3>
+                        <hr>
+                        <div class="row">
+
+                            @using (Html.BeginForm("PostComment", "Forum", FormMethod.Post))
+                            {
+                                @Html.HiddenFor(x => x.Id)
+                                <div class="post9320-box">
+                                    @Html.TextBoxFor(x => x.CommentDescription, new { placeholder = "Enter Your Answer", @class = "comment-input219882" })
+                                </div>
+                                <button type="submit" class="pos393-submit">Post Your Answer</button>
+                            }
+                        </div>
+                    </div>
+                }
+            <!--                end of col-md-9 -->
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete: <span class="description"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <input type="submit" id="deleteButton" value="Delete" class="btn btn-danger" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section PageScripts
+{
+    <script>
+        $("#like").click(function () {
+            var id = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "/Member/Forum/IncrementQuestionVote/" + id,
+                data: { id: id },
+                success: function () {
+                    location.reload();
+                }
+            });
+        })
+
+        $("#dislike").click(function () {
+            var id = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "/Member/Forum/DecrementQuestionVote/" + id,
+                data: { id: id },
+                success: function () {
+                    location.reload();
+                }
+            });
+        })
+
+        $(".likebtn").click(function () {
+            var id = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "/Member/Forum/IncrementCommentVote/" + id,
+                data: { id: id },
+                success: function () {
+                    location.reload();
+                }
+            });
+        })
+
+        $(".dislikebtn").click(function () {
+            var id = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "/Member/Forum/DecrementCommentVote/" + id,
+                data: { id: id },
+                success: function () {
+                    location.reload();
+                }
+            });
+        })
+
+        $(".deleteCommentbtn").click(function () {
+            id = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "/Member/Forum/DeleteComment/" + id,
+                data: { id: id },
+                success: function () {
+                    location.reload();
+                }
+            });
+        });
+
+        $(".approveCommentbtn").click(function () {
+            var id = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "/Member/Forum/ApproveComment/" + id,
+                data: { id: id },
+                success: function () {
+                    location.reload();
+                }
+            });
+        })
+
+        $("#deleteButton").click(function () {
+            var url = window.location.pathname;
+            var id = url.substring(url.lastIndexOf('/') + 1);
+            window.location.href = '@Url.Action("DeleteQuestion", "Forum")/' + id;
+        });
+
+        $('#confirm-delete').on('show.bs.modal', function (e) {
+            var data = $(e.relatedTarget).data();
+            $('.description', this).text(data.itemDescription);
+            $('.btn-ok', this).data('itemId', data.itemId);
+        });
+    </script>
+}

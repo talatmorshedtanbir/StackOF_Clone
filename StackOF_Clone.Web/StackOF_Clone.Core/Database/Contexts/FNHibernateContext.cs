@@ -3,6 +3,7 @@ using FluentNHibernate.Cfg.Db;
 using NHibernate;
 using NHibernate.AspNet.Identity.Helpers;
 using NHibernate.Tool.hbm2ddl;
+using StackOF_Clone.Core.Database.Mappings;
 using StackOF_Clone.Core.Entities;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,8 @@ namespace StackOF_Clone.Core.Database.Contexts
 
             FluentConfiguration _config = Fluently.Configure()
                 .Database(MsSqlConfiguration.MsSql2012.ConnectionString(connectionString))
+                .Mappings(x => x.FluentMappings.AddFromAssemblyOf<QuestionMapping>())
+                .Mappings(x => x.FluentMappings.AddFromAssemblyOf<CommentMapping>())
                 .ExposeConfiguration(cfg =>
                 {
                     cfg.AddDeserializedMapping(MappingHelper.GetIdentityMappings(myEntities), null);
