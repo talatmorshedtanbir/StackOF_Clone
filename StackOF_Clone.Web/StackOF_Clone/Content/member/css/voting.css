@@ -1,0 +1,29 @@
+   .upvote {
+		display: inline-block;
+		overflow: hidden;
+		width: 40px;
+		height: 25px;
+		cursor: pointer;
+		background: url('/Content/member/image/up.png');
+		background-position: 0 -25px;
+	}
+	 .upvote.on {
+		   background-position: 0 2px;
+		   pointer-events: none;
+	 }
+	 
+   .downvote {
+		display: inline-block;
+		overflow: hidden;
+		width: 40px;
+		height: 25px;
+		cursor: pointer;
+		background: url('/Content/member/image/down.png');
+		background-position: 0 30;
+	}
+	 .downvote.on {
+		   background-position: 0 -30px;
+		   pointer-events: none;
+	 }
+		 
+	

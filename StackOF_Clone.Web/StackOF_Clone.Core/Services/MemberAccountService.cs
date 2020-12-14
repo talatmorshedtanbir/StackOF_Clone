@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using NHibernate;
 using NHibernate.AspNet.Identity;
 using StackOF_Clone.Core.Entities;
@@ -7,54 +8,61 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
+using System.Net.Http;
 
 namespace StackOF_Clone.Core.Services
 {
     public class MemberAccountService : IMemberAccountService
     {
         private readonly ISession _session;
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly ApplicationUserManager _applicationUserManager;
+        public MemberAccountService(ISession session, ApplicationUserManager applicationUserManager)
+        {
+            _session = session;
+            _applicationUserManager = applicationUserManager;
+        }
+
         public MemberAccountService(ISession session)
         {
             _session = session;
-             userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_session));
+            _applicationUserManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
         }
-
         public IList<ApplicationUser> GetMembersList()
         {
-            var users = userManager.Users.ToList();
+            var users = _applicationUserManager.Users.ToList();
 
             return users;
         }
 
         public Task<IdentityResult> Delete(ApplicationUser user)
         {
-            return userManager.DeleteAsync(user);
+            return _applicationUserManager.DeleteAsync(user);
         }
 
         public Task<ApplicationUser> FindById(string id)
         {
-            return userManager.FindByIdAsync(id);
+            return _applicationUserManager.FindByIdAsync(id);
         }
 
         public Task<IList<string>> GetRoles(ApplicationUser user)
         {
-            return userManager.GetRolesAsync(user.Id);
+            return _applicationUserManager.GetRolesAsync(user.Id);
         }
 
         public Task<IdentityResult> RemoveRoles(ApplicationUser user, List<string> roles)
         {
-            return userManager.RemoveFromRolesAsync(user.Id, roles.ToArray());
+            return _applicationUserManager.RemoveFromRolesAsync(user.Id, roles.ToArray());
         }
 
         public Task<IdentityResult> AddRoles(ApplicationUser user, List<string> roles)
         {
-            return userManager.AddToRolesAsync(user.Id, roles.ToArray());
+            return _applicationUserManager.AddToRolesAsync(user.Id, roles.ToArray());
         }
 
         public Task<IdentityResult> Update(ApplicationUser user)
         {
-            return userManager.UpdateAsync(user);
+            return _applicationUserManager.UpdateAsync(user);
         }
     }
 }

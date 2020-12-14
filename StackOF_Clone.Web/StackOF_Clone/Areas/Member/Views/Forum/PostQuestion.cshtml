@@ -1,0 +1,34 @@
+﻿@model StackOF_Clone.Web.Areas.Member.Models.PostQuestionModel
+@{
+    ViewBag.Title = "PostQuestion";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="ask-question-input-part032">
+                <h4>Ask Question</h4>
+                <hr>
+                @using (Html.BeginForm("PostQuestion", "Forum", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        <span class="form-description433">Question-Title* </span>
+                        @Html.TextBoxFor(x => x.Title, new { @class = "form-control" });
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12 nopadding">
+                            <span class="form-description433">Question-Details* </span>
+                            @Html.TextAreaFor(x => x.Description, new { @class = "form-control", @row = 3 });
+                        </div>
+                    </div>
+                    <div class="publish-button2389">
+                        <button type="submit" class="publis1291">Publish your Question</button>
+                    </div>
+                }
+            </div>
+        </div>
+        <!--                end of col-md-9 -->
+    </div>
+</div>
