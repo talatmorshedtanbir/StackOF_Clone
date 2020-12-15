@@ -70,6 +70,7 @@ namespace StackOF_Clone.Web.Areas.Member.Controllers
             await model.QuestionVoteUpdate(id, "+");
         }
 
+        [Authorize(Roles = "Member, Moderator")]
         public async Task DecrementQuestionVote(int id)
         {
             var model = new QuestionUpdateModel();
@@ -93,12 +94,15 @@ namespace StackOF_Clone.Web.Areas.Member.Controllers
             await model.DeleteComment(id);
         }
 
+        [Authorize(Roles = "Member, Moderator")]
         public async Task IncrementCommentVote(int id)
         {
             var model = new CommentUpdateModel();
 
             await model.CommentVoteUpdate(id, "+");
         }
+
+        [Authorize(Roles = "Member, Moderator")]
         public async Task DecrementCommentVote(int id)
         {
             var model = new CommentUpdateModel();
